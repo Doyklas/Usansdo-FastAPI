@@ -1,4 +1,6 @@
 from fastapi import FastAPI
+import uvicorn
+from pydantic import BaseModel
 
 app = FastAPI()
 
@@ -7,6 +9,10 @@ vendas ={
     2: {"item": "livro", "preco": 40.00},
     3: {"item": "garrafa", "preco": 3.00}
 }
+
+class Inputs(BaseModel):
+    i1: int
+    i2: str
 
 @app.get("/")
 def rodando():
@@ -18,3 +24,11 @@ def pegar_venda(id_venda: int):
         return vendas[id_venda]
     else:
         return "Venda não encontrada"
+    
+@app.post("/nova")
+def nova(inputs: Inputs) -> str:
+    return inputs.i2
+
+
+if __name__ == "__main__":
+    uvicorn.run(app, port=8000)
